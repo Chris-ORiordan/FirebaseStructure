@@ -5,8 +5,8 @@ import android.arch.core.util.Function;
 import android.support.annotation.*;
 import android.util.Log;
 
+import com.example.standard.firebasestructure.model.*;
 import com.example.standard.firebasestructure.network.FirebaseQueryLiveData;
-import com.example.standard.firebasestructure.model.OutGoer;
 import com.google.firebase.database.*;
 
 import java.util.*;
@@ -61,5 +61,40 @@ public class OutGoerViewModel extends ViewModel {
             }
         });
         return idList;
+    }
+
+    public void onUserGoingOut(User selectedUser, Venue selectedVenue){
+        final OutGoer outGoer = new OutGoer(selectedUser.getUserId(), selectedUser.getUserName(), selectedVenue.getVenueId(),
+                selectedVenue.getVenueName(), System.currentTimeMillis());
+
+        for(String friendKey: selectedUser.getFriends().keySet()){
+            OUTGOER_REF.child(friendKey).child(selectedUser.getUserId()).child(selectedVenue.getVenueId()).setValue(outGoer);
+        }
+
+        //final String key = reference.push().getKey();
+//        final OutGoer outGoer = new OutGoer(selectedUser.getUserId(), selectedUser.getUserName(),
+//                selectedVenue.getVenueId(), selectedVenue.getVenueName(), System.currentTimeMillis());
+//        reference.child("Users").child(selectedUser.getUserId()).child("friends").addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for(DataSnapshot dsp: dataSnapshot.getChildren()){
+//                    String friendId = dsp.getKey();
+//                    reference.child("OutGoer").child(friendId).child(selectedUser.getUserId()).child(selectedVenue.getVenueId()).setValue(outGoer);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                Log.e(TAG, databaseError.toString());
+//            }
+//        });
+    }
+
+    public void updateOutGoerUser(User currentUser, Map<String, Object> newNameMap){
+        for(String userKey: currentUser.getFriends().keySet()){
+            for(String venueKey: currentUser.getDestinations().keySet()){
+                OUTGOER_REF.child(userKey).child(currentUser.getUserId()).child(venueKey).updateChildren(newNameMap);
+            }
+        }
     }
 }

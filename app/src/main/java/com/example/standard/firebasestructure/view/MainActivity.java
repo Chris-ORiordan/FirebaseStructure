@@ -1,5 +1,7 @@
 package com.example.standard.firebasestructure.view;
 
+import android.arch.lifecycle.*;
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.support.annotation.*;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +13,7 @@ import android.widget.*;
 import com.example.standard.firebasestructure.R;
 import com.example.standard.firebasestructure.model.*;
 import com.example.standard.firebasestructure.model.adapters.*;
+import com.example.standard.firebasestructure.viewmodel.*;
 import com.google.firebase.database.*;
 
 import java.util.*;
@@ -20,13 +23,17 @@ public class MainActivity extends AppCompatActivity {
     private Spinner spinnerUserGoingOut;
     private Spinner spinnerVenue;
     private Button buttonAdd;
-    private Button buttonNext;
-    private Button buttonGo;
+    private Button buttonFeed;
+    private Button buttonGoUpdate;
     private FirebaseDatabase database;
     private DatabaseReference reference;
     private UserAdapter userAdapter;
     private UserAdapter otherUserAdapter;
     private VenueAdapter venueAdapter;
+
+    private UserViewModel userViewModel;
+    private VenueViewModel venueViewModel;
+    private OutGoerViewModel outGoerViewModel;
 
     private User selectedUser;
     private User otherSelectedUser;
@@ -42,11 +49,15 @@ public class MainActivity extends AppCompatActivity {
         spinnerUserGoingOut = findViewById(R.id.spinnerUserGoingOut);
         spinnerVenue = findViewById(R.id.spinnerVenue);
         buttonAdd = findViewById(R.id.buttonAdd);
-        buttonNext = findViewById(R.id.buttonNext);
-        buttonGo = findViewById(R.id.buttonGo);
+        buttonFeed = findViewById(R.id.buttonFeed);
+        buttonGoUpdate = findViewById(R.id.buttonGoUpdate);
 
         database = FirebaseDatabase.getInstance();
         reference = database.getReference();
+
+        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        venueViewModel = ViewModelProviders.of(this).get(VenueViewModel.class);
+        outGoerViewModel = ViewModelProviders.of(this).get(OutGoerViewModel.class);
 
         //createUsersAndVenues();
 
@@ -60,22 +71,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //addFriendships();
-                onUserGoingOut();
+                userViewModel.onUserGoingOut(selectedUser, selectedVenue);
+                venueViewModel.onUserGoingOut(selectedUser, selectedVenue);
+                outGoerViewModel.onUserGoingOut(selectedUser, selectedVenue);
             }
         });
 
-        buttonNext.setOnClickListener(new View.OnClickListener() {
+        buttonFeed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), ViewActivity.class);
+                Intent intent = new Intent(MainActivity.this, FeedActivity.class);
                 startActivity(intent);
             }
         });
 
-        buttonGo.setOnClickListener(new View.OnClickListener() {
+        buttonGoUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, ExperimentActivity.class);
+                Intent intent = new Intent(MainActivity.this, UpdateActivity.class);
                 startActivity(intent);
             }
         });
@@ -133,104 +146,65 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void populateSpinners() {
-        final List<User> userList = new ArrayList<>();
 
-        reference.child("Users").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                User user = dataSnapshot.getValue(User.class);
-                userList.add(user);
-                userAdapter = new UserAdapter(MainActivity.this, R.layout.support_simple_spinner_dropdown_item, userList);
-                userAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-                spinnerUserGoingOut.setAdapter(userAdapter);
-//                otherUserAdapter = new UserAdapter(MainActivity.this, R.layout.support_simple_spinner_dropdown_item, userList);
-//                otherUserAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-//                spinnerVenue.setAdapter(otherUserAdapter);
-            }
+        if(userViewModel != null){
+            LiveData<List<User>> userLiveData = userViewModel.getUserLiveData();
 
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        final List<Venue> venueList = new ArrayList<>();
-
-        reference.child("Venues").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Venue venue = dataSnapshot.getValue(Venue.class);
-                venueList.add(venue);
-                venueAdapter = new VenueAdapter(MainActivity.this, R.layout.support_simple_spinner_dropdown_item,venueList);
-                venueAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-                spinnerVenue.setAdapter(venueAdapter);
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void onUserGoingOut(){
-        //add to user destinations
-        reference.child("Users").child(selectedUser.getUserId())
-                .child("destinations").child(selectedVenue.getVenueId()).setValue(true);
-
-        //add to venue attendees
-        reference.child("Venues").child(selectedVenue.getVenueId())
-                .child("attendees").child(selectedUser.getUserId()).setValue(true);
-
-        //add to friends going out
-        //final String key = reference.push().getKey();
-        final OutGoer outGoer = new OutGoer(selectedUser.getUserId(), selectedUser.getUserName(),
-                selectedVenue.getVenueId(), selectedVenue.getVenueName(), System.currentTimeMillis());
-        reference.child("Users").child(selectedUser.getUserId()).child("friends").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot dsp: dataSnapshot.getChildren()){
-                    String friendId = dsp.getKey();
-                    reference.child("OutGoer").child(friendId).child(selectedUser.getUserId()).child(selectedVenue.getVenueId()).setValue(outGoer);
+            userLiveData.observe(this, new Observer<List<User>>() {
+                @Override
+                public void onChanged(@Nullable List<User> users) {
+                    userAdapter = new UserAdapter(MainActivity.this, R.layout.support_simple_spinner_dropdown_item, users);
+                    userAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+                    spinnerUserGoingOut.setAdapter(userAdapter);
+//                    otherUserAdapter = new UserAdapter(MainActivity.this, R.layout.support_simple_spinner_dropdown_item, users);
+//                    otherUserAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+//                    spinnerVenue.setAdapter(otherUserAdapter);
                 }
-            }
+            });
+        }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e(TAG, databaseError.toString());
-            }
-        });
+        if(venueViewModel != null){
+            LiveData<List<Venue>> venueLiveData = venueViewModel.getVenueLiveData();
+
+            venueLiveData.observe(this, new Observer<List<Venue>>() {
+                @Override
+                public void onChanged(@Nullable List<Venue> venues) {
+                    venueAdapter = new VenueAdapter(MainActivity.this, R.layout.support_simple_spinner_dropdown_item, venues);
+                    venueAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+                    spinnerVenue.setAdapter(venueAdapter);
+                }
+            });
+        }
     }
+
+//    private void onUserGoingOut(){
+//        //add to user destinations
+//        reference.child("Users").child(selectedUser.getUserId())
+//                .child("destinations").child(selectedVenue.getVenueId()).setValue(true);
+//
+//        //add to venue attendees
+//        reference.child("Venues").child(selectedVenue.getVenueId())
+//                .child("attendees").child(selectedUser.getUserId()).setValue(true);
+//
+//        //add to friends going out
+//        //final String key = reference.push().getKey();
+//        final OutGoer outGoer = new OutGoer(selectedUser.getUserId(), selectedUser.getUserName(),
+//                selectedVenue.getVenueId(), selectedVenue.getVenueName(), System.currentTimeMillis());
+//        reference.child("Users").child(selectedUser.getUserId()).child("friends").addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for(DataSnapshot dsp: dataSnapshot.getChildren()){
+//                    String friendId = dsp.getKey();
+//                    reference.child("OutGoer").child(friendId).child(selectedUser.getUserId()).child(selectedVenue.getVenueId()).setValue(outGoer);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                Log.e(TAG, databaseError.toString());
+//            }
+//        });
+//    }
 
     private void addFriendships(){
         reference.child("Users").child(selectedUser.getUserId())

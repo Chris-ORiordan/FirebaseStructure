@@ -4,16 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.ViewActivity">
+    tools:context=".view.UpdateActivity">
 
     <LinearLayout
         android:id="@+id/layoutUser"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="20dp"
         android:orientation="vertical">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="User I am"
             android:singleLine="false"/>
@@ -22,9 +23,17 @@
             android:id="@+id/spinnerWhoAmI"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutEdit"
+        android:layout_below="@+id/layoutUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="New Name:"/>
 
@@ -35,19 +44,10 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/textOutput"
-        android:layout_width="wrap_content"
+    <Button
+        android:layout_below="@id/layoutEdit"
+        android:id="@+id/buttonUpdate"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layoutUser"
-        android:layout_marginTop="150dp"
-        tools:text="Text"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabUpdateDetails"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_margin="20dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"/>
+        android:text="Update Name"/>
 </RelativeLayout>

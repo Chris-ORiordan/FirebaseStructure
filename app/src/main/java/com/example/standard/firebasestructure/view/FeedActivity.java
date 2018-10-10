@@ -11,18 +11,21 @@ import android.widget.*;
 
 import com.example.standard.firebasestructure.R;
 import com.example.standard.firebasestructure.model.*;
-import com.example.standard.firebasestructure.model.adapters.UserAdapter;
+import com.example.standard.firebasestructure.model.adapters.*;
 import com.example.standard.firebasestructure.viewmodel.*;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
-public class ExperimentActivity extends AppCompatActivity {
+import static com.example.standard.firebasestructure.Utils.calculateTimeSince;
 
-    private static final String TAG = ExperimentActivity.class.getSimpleName();
+public class FeedActivity extends AppCompatActivity {
+
+    private static final String TAG = FeedActivity.class.getSimpleName();
 
     private Spinner spinnerUserIAm;
     private UserAdapter userAdapter;
+    private OutGoerAdapter outGoerAdapter;
+    private ListView listViewOutGoers;
 
     private UserViewModel userViewModel;
     private VenueViewModel venueViewModel;
@@ -38,6 +41,7 @@ public class ExperimentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_experiment);
 
         spinnerUserIAm = findViewById(R.id.spinnerUserIAm);
+        listViewOutGoers = findViewById(R.id.listViewOutGoers);
 
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         venueViewModel = ViewModelProviders.of(this).get(VenueViewModel.class);
@@ -54,7 +58,7 @@ public class ExperimentActivity extends AppCompatActivity {
                 @Override
                 public void onChanged(@Nullable List<User> userList) {
                     users = userList;
-                    userAdapter = new UserAdapter(getApplicationContext(), R.layout.support_simple_spinner_dropdown_item, userList);
+                    userAdapter = new UserAdapter(FeedActivity.this, R.layout.support_simple_spinner_dropdown_item, userList);
                     userAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
                     spinnerUserIAm.setAdapter(userAdapter);
                 }
@@ -67,9 +71,11 @@ public class ExperimentActivity extends AppCompatActivity {
                 if(outGoerViewModel != null){
                     LiveData<List<OutGoer>> outGoerLiveData = outGoerViewModel.getOutGoerLiveData(userAdapter.getItem(i).getUserId());
 
-                    outGoerLiveData.observe(ExperimentActivity.this, new Observer<List<OutGoer>>() {
+                    outGoerLiveData.observe(FeedActivity.this, new Observer<List<OutGoer>>() {
                         @Override
                         public void onChanged(@Nullable List<OutGoer> outGoers) {
+                            outGoerAdapter = new OutGoerAdapter(getApplicationContext(), R.layout.view_feed_item, outGoers);
+                            listViewOutGoers.setAdapter(outGoerAdapter);
                             for(int i=0; i < outGoers.size(); i++) {
                                 OutGoer outGoer = outGoers.get(i);
                                 Log.d(TAG, outGoer.getUserName() + " is going to " + outGoer.getVenueName() + " as of " + calculateTimeSince(outGoer.getTimeMillis()));
@@ -84,16 +90,5 @@ public class ExperimentActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    private String calculateTimeSince(Long timeMillis) {
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - timeMillis);
-        if(minutes < 60){
-            return minutes + " minutes ago";
-        } else {
-            double d = Math.floor(minutes/ 60);
-            Long l = (long) d;
-            return l + " hours ago";
-        }
     }
 }

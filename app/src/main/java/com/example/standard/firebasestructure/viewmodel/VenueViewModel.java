@@ -4,8 +4,8 @@ import android.arch.core.util.Function;
 import android.arch.lifecycle.*;
 import android.support.annotation.NonNull;
 
+import com.example.standard.firebasestructure.model.*;
 import com.example.standard.firebasestructure.network.FirebaseQueryLiveData;
-import com.example.standard.firebasestructure.model.Venue;
 import com.google.firebase.database.*;
 
 import java.util.*;
@@ -32,5 +32,13 @@ public class VenueViewModel extends ViewModel {
             }
             return venueList;
         }
+    }
+
+    public void onUserGoingOut(User selectedUser, Venue selectedVenue){
+        VENUE_REF.child(selectedVenue.getVenueId()).child("attendees").child(selectedUser.getUserId()).setValue(true);
+    }
+
+    public void updateVenue(Venue currentVenue, Map<String, Object> newNameMap){
+        VENUE_REF.child(currentVenue.getVenueId()).updateChildren(newNameMap);
     }
 }

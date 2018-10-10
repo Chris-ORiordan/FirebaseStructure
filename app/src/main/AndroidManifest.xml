@@ -18,8 +18,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.ViewActivity" />
-        <activity android:name=".view.ExperimentActivity"></activity>
+        <activity android:name=".view.UpdateActivity" />
+        <activity android:name=".view.FeedActivity"/>
     </application>
 
 </manifest>

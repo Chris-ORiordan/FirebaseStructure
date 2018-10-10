@@ -6,26 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".view.MainActivity">
 
-    <!--<LinearLayout
-        android:id="@+id/layoutMe"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="20dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="User I am"/>
-
-        <Spinner
-            android:id="@+id/spinnerMe"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:tooltipText="me" />
-
-    </LinearLayout>-->
-
     <LinearLayout
         android:id="@+id/layoutUserGoingOut"
         android:layout_width="match_parent"
@@ -76,19 +56,19 @@
         android:layout_margin="20dp"/>
 
     <Button
-        android:id="@+id/buttonNext"
+        android:id="@+id/buttonFeed"
         android:layout_below="@id/buttonAdd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ViewFeed"
+        android:text="View Feed"
         android:layout_margin="20dp"/>
 
     <Button
-        android:id="@+id/buttonGo"
-        android:layout_below="@id/buttonAdd"
+        android:id="@+id/buttonGoUpdate"
+        android:layout_below="@id/buttonFeed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Experiment"
+        android:text="Go to Update"
         android:layout_margin="20dp"/>
 
 </RelativeLayout>
