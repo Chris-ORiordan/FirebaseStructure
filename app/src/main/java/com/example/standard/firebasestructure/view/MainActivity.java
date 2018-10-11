@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private Spinner spinnerVenue;
     private Button buttonAdd;
     private Button buttonFeed;
+    private Button buttonVenue;
     private Button buttonGoUpdate;
     private FirebaseDatabase database;
     private DatabaseReference reference;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         spinnerVenue = findViewById(R.id.spinnerVenue);
         buttonAdd = findViewById(R.id.buttonAdd);
         buttonFeed = findViewById(R.id.buttonFeed);
+        buttonVenue = findViewById(R.id.buttonVenue);
         buttonGoUpdate = findViewById(R.id.buttonGoUpdate);
 
         database = FirebaseDatabase.getInstance();
@@ -81,6 +83,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, FeedActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        buttonVenue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, VenueActivity.class);
                 startActivity(intent);
             }
         });

@@ -64,8 +64,16 @@
         android:layout_margin="20dp"/>
 
     <Button
-        android:id="@+id/buttonGoUpdate"
+        android:id="@+id/buttonVenue"
         android:layout_below="@id/buttonFeed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Venues"
+        android:layout_margin="20dp"/>
+
+    <Button
+        android:id="@+id/buttonGoUpdate"
+        android:layout_below="@id/buttonVenue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Go to Update"

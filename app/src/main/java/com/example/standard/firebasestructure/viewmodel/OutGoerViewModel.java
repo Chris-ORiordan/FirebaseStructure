@@ -70,24 +70,6 @@ public class OutGoerViewModel extends ViewModel {
         for(String friendKey: selectedUser.getFriends().keySet()){
             OUTGOER_REF.child(friendKey).child(selectedUser.getUserId()).child(selectedVenue.getVenueId()).setValue(outGoer);
         }
-
-        //final String key = reference.push().getKey();
-//        final OutGoer outGoer = new OutGoer(selectedUser.getUserId(), selectedUser.getUserName(),
-//                selectedVenue.getVenueId(), selectedVenue.getVenueName(), System.currentTimeMillis());
-//        reference.child("Users").child(selectedUser.getUserId()).child("friends").addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for(DataSnapshot dsp: dataSnapshot.getChildren()){
-//                    String friendId = dsp.getKey();
-//                    reference.child("OutGoer").child(friendId).child(selectedUser.getUserId()).child(selectedVenue.getVenueId()).setValue(outGoer);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                Log.e(TAG, databaseError.toString());
-//            }
-//        });
     }
 
     public void updateOutGoerUser(User currentUser, Map<String, Object> newNameMap){

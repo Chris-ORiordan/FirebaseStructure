@@ -2,9 +2,10 @@ package com.example.standard.firebasestructure.model;
 
 import android.support.annotation.Nullable;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Venue {
+public class Venue implements Serializable{
     private String venueId;
     private String venueName;
     @Nullable
