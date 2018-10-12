@@ -52,20 +52,8 @@ public class OutGoerAdapter extends ArrayAdapter<OutGoer> {
 
         tvUserName.setText(outGoers.get(position).getUserName());
         tvVenueName.setText(outGoers.get(position).getVenueName());
-        tvTimeSince.setText(calculateTimeSince(outGoers.get(position).getTimeMillis()));
+        tvTimeSince.setText(calculateTimeSince(context, outGoers.get(position).getTimeMillis()));
 
         return convertView;
-
-//        TextView textView = (TextView) super.getView(position, convertView, parent);
-//        textView.setText(outGoers.get(position).getUserName() + " is going to " + outGoers.get(position).getVenueName()
-//                + " as of " + calculateTimeSince(outGoers.get(position).getTimeMillis()));
-//        return textView;
     }
-
-//    @Override
-//    public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-//        TextView textView = (TextView) super.getView(position, convertView, parent);
-//        textView.setText(outGoers.get(position).getUserName());
-//        return textView;
-//    }
 }

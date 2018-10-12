@@ -24,14 +24,11 @@ public class UpdateActivity extends AppCompatActivity {
     private Button buttonUpdate;
 
     private UserViewModel userViewModel;
-    private VenueViewModel venueViewModel;
     private OutGoerViewModel outGoerViewModel;
 
     private UserAdapter userAdapter;
-    private VenueAdapter venueAdapter;
 
     private User currentUser;
-    private Venue currentVenue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +40,6 @@ public class UpdateActivity extends AppCompatActivity {
         buttonUpdate = findViewById(R.id.buttonUpdate);
 
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
-        venueViewModel = ViewModelProviders.of(this).get(VenueViewModel.class);
         outGoerViewModel = ViewModelProviders.of(this).get(OutGoerViewModel.class);
 
         if(userViewModel != null){
@@ -82,8 +78,5 @@ public class UpdateActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
-
-
 }

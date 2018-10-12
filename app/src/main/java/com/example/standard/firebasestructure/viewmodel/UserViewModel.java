@@ -14,6 +14,7 @@ public class UserViewModel extends ViewModel {
     private static final DatabaseReference USER_REF = FirebaseDatabase.getInstance().getReference().child("Users");
 
     private List<User> userList = new ArrayList<>();
+    private List<User> friendList = new ArrayList<>();
 
     @NonNull
     public LiveData<List<User>> getUserLiveData(){
@@ -21,6 +22,13 @@ public class UserViewModel extends ViewModel {
         LiveData<List<User>> usersLiveData = Transformations.map(liveData, new Deserialiser());
         return usersLiveData;
     }
+
+    public LiveData<List<User>> getFriendLiveData(Set<String> friendIDs) {
+        FirebaseQueryLiveData liveData = new FirebaseQueryLiveData(USER_REF);
+        LiveData<List<User>> friendsLiveData = Transformations.map(liveData, new FriendDeserialiser(friendIDs));
+        return friendsLiveData;
+    }
+
 
     private class Deserialiser implements Function<DataSnapshot, List<User>>{
         @Override
@@ -32,6 +40,28 @@ public class UserViewModel extends ViewModel {
                 userList.add(user);
             }
             return userList;
+        }
+    }
+
+    private class FriendDeserialiser implements Function<DataSnapshot, List<User>>{
+
+        private Set<String> friendIds;
+
+        public FriendDeserialiser(Set<String> friendIDs) {
+            this.friendIds = friendIDs;
+        }
+        @Override
+        public List<User> apply(DataSnapshot dataSnapshot) {
+            friendList.clear();
+            for(String friendId: friendIds){
+                for(DataSnapshot dsp: dataSnapshot.getChildren()){
+                    User user = dsp.getValue(User.class);
+                    if(friendId.equals(user.getUserId())){
+                        friendList.add(user);
+                    }
+                }
+            }
+            return friendList;
         }
     }
 

@@ -5,7 +5,6 @@ import android.arch.lifecycle.Observer;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.*;
 
@@ -15,8 +14,6 @@ import com.example.standard.firebasestructure.model.adapters.*;
 import com.example.standard.firebasestructure.viewmodel.*;
 
 import java.util.*;
-
-import static com.example.standard.firebasestructure.Utils.calculateTimeSince;
 
 public class FeedActivity extends AppCompatActivity {
 
@@ -28,12 +25,7 @@ public class FeedActivity extends AppCompatActivity {
     private ListView listViewOutGoers;
 
     private UserViewModel userViewModel;
-    private VenueViewModel venueViewModel;
     private OutGoerViewModel outGoerViewModel;
-
-    private List<User> users;
-    private List<Venue> venues;
-    private List<OutGoer> outGoers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +36,7 @@ public class FeedActivity extends AppCompatActivity {
         listViewOutGoers = findViewById(R.id.listViewOutGoers);
 
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
-        venueViewModel = ViewModelProviders.of(this).get(VenueViewModel.class);
         outGoerViewModel = ViewModelProviders.of(this).get(OutGoerViewModel.class);
-
-        users = new ArrayList<>();
-        venues = new ArrayList<>();
-        outGoers = new ArrayList<>();
 
         if(userViewModel != null){
             LiveData<List<User>> userLiveData = userViewModel.getUserLiveData();
@@ -57,7 +44,6 @@ public class FeedActivity extends AppCompatActivity {
             userLiveData.observe(this, new Observer<List<User>>() {
                 @Override
                 public void onChanged(@Nullable List<User> userList) {
-                    users = userList;
                     userAdapter = new UserAdapter(FeedActivity.this, R.layout.support_simple_spinner_dropdown_item, userList);
                     userAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
                     spinnerUserIAm.setAdapter(userAdapter);
@@ -76,10 +62,6 @@ public class FeedActivity extends AppCompatActivity {
                         public void onChanged(@Nullable List<OutGoer> outGoers) {
                             outGoerAdapter = new OutGoerAdapter(getApplicationContext(), R.layout.view_feed_item, outGoers);
                             listViewOutGoers.setAdapter(outGoerAdapter);
-                            for(int i=0; i < outGoers.size(); i++) {
-                                OutGoer outGoer = outGoers.get(i);
-                                Log.d(TAG, outGoer.getUserName() + " is going to " + outGoer.getVenueName() + " as of " + calculateTimeSince(outGoer.getTimeMillis()));
-                            }
                         }
                     });
                 }

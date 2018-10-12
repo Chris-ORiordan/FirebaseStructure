@@ -3,9 +3,10 @@ package com.example.standard.firebasestructure.model;
 import android.support.annotation.*;
 import android.widget.ListView;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class User {
+public class User implements Serializable {
     private String userId;
     private String userName;
     @Nullable
@@ -56,5 +57,4 @@ public class User {
     public void setDestinations(@Nullable Map<String,Boolean> destinations) {
         this.destinations = destinations;
     }
-
 }

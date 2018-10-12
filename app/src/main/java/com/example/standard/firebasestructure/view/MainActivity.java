@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.support.annotation.*;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.*;
 
@@ -18,12 +17,13 @@ import com.google.firebase.database.*;
 
 import java.util.*;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private Spinner spinnerUserGoingOut;
     private Spinner spinnerVenue;
     private Button buttonAdd;
     private Button buttonFeed;
+    private Button buttonFriend;
     private Button buttonVenue;
     private Button buttonGoUpdate;
     private FirebaseDatabase database;
@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         spinnerVenue = findViewById(R.id.spinnerVenue);
         buttonAdd = findViewById(R.id.buttonAdd);
         buttonFeed = findViewById(R.id.buttonFeed);
+        buttonFriend = findViewById(R.id.buttonFriend);
         buttonVenue = findViewById(R.id.buttonVenue);
         buttonGoUpdate = findViewById(R.id.buttonGoUpdate);
 
@@ -68,40 +69,42 @@ public class MainActivity extends AppCompatActivity {
         addListeners();
     }
 
-    private void addListeners() {
-        buttonAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+    @Override
+    public void onClick(View view) {
+        Intent intent;
+        switch(view.getId()){
+            case R.id.buttonAdd:
                 //addFriendships();
                 userViewModel.onUserGoingOut(selectedUser, selectedVenue);
                 venueViewModel.onUserGoingOut(selectedUser, selectedVenue);
                 outGoerViewModel.onUserGoingOut(selectedUser, selectedVenue);
-            }
-        });
-
-        buttonFeed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, FeedActivity.class);
+                break;
+            case R.id.buttonFeed:
+                intent = new Intent(MainActivity.this, FeedActivity.class);
                 startActivity(intent);
-            }
-        });
-
-        buttonVenue.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, VenueActivity.class);
+                break;
+            case R.id.buttonFriend:
+                intent = new Intent(MainActivity.this, FriendActivity.class);
                 startActivity(intent);
-            }
-        });
-
-        buttonGoUpdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, UpdateActivity.class);
+                break;
+            case R.id.buttonVenue:
+                intent = new Intent(MainActivity.this, VenueActivity.class);
                 startActivity(intent);
-            }
-        });
+                break;
+            case R.id.buttonGoUpdate:
+                intent = new Intent(MainActivity.this, UpdateActivity.class);
+                startActivity(intent);
+                break;
+        }
+    }
+
+    private void addListeners() {
+
+        buttonAdd.setOnClickListener(this);
+        buttonFeed.setOnClickListener(this);
+        buttonFriend.setOnClickListener(this);
+        buttonVenue.setOnClickListener(this);
+        buttonGoUpdate.setOnClickListener(this);
 
         spinnerUserGoingOut.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -186,35 +189,6 @@ public class MainActivity extends AppCompatActivity {
             });
         }
     }
-
-//    private void onUserGoingOut(){
-//        //add to user destinations
-//        reference.child("Users").child(selectedUser.getUserId())
-//                .child("destinations").child(selectedVenue.getVenueId()).setValue(true);
-//
-//        //add to venue attendees
-//        reference.child("Venues").child(selectedVenue.getVenueId())
-//                .child("attendees").child(selectedUser.getUserId()).setValue(true);
-//
-//        //add to friends going out
-//        //final String key = reference.push().getKey();
-//        final OutGoer outGoer = new OutGoer(selectedUser.getUserId(), selectedUser.getUserName(),
-//                selectedVenue.getVenueId(), selectedVenue.getVenueName(), System.currentTimeMillis());
-//        reference.child("Users").child(selectedUser.getUserId()).child("friends").addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for(DataSnapshot dsp: dataSnapshot.getChildren()){
-//                    String friendId = dsp.getKey();
-//                    reference.child("OutGoer").child(friendId).child(selectedUser.getUserId()).child(selectedVenue.getVenueId()).setValue(outGoer);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                Log.e(TAG, databaseError.toString());
-//            }
-//        });
-//    }
 
     private void addFriendships(){
         reference.child("Users").child(selectedUser.getUserId())

@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">FirebaseStructure</string>
+
+    <string name="destinations">\u0020destinations</string>
+    <string name="destination">\u0020destination</string>
+    <string name="noDestinations">Not Going Out :(</string>
+
+    <string name="attendees">\u0020attendees</string>
+    <string name="attendee">\u0020attendee</string>
+    <string name="noAttendees">Nobody going here :(</string>
+
+    <!--String to identify how long ago an event occurred-->
+    <string name="seconds">s</string>
+    <string name="minutes">m</string>
+    <string name="hours">h</string>
+    <string name="days">d</string>
+    <string name="weeks">w</string>
+    <string name="years">y</string>
+
 </resources>

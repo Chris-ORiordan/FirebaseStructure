@@ -21,7 +21,9 @@
         <activity android:name=".view.UpdateActivity" />
         <activity android:name=".view.FeedActivity" />
         <activity android:name=".view.VenueActivity" />
-        <activity android:name=".view.VenueDetailActivity"></activity>
+        <activity android:name=".view.VenueDetailActivity" />
+        <activity android:name=".view.FriendActivity" />
+        <activity android:name=".view.FriendDetailActivity"></activity>
     </application>
 
 </manifest>

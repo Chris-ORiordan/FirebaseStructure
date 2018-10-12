@@ -53,7 +53,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/layoutVenueGoingTo"
         android:text="Add"
-        android:layout_margin="20dp"/>
+        android:layout_margin="10dp"/>
 
     <Button
         android:id="@+id/buttonFeed"
@@ -61,15 +61,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="View Feed"
-        android:layout_margin="20dp"/>
+        android:layout_margin="10dp"/>
 
     <Button
-        android:id="@+id/buttonVenue"
+        android:id="@+id/buttonFriend"
         android:layout_below="@id/buttonFeed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="View Friends"
+        android:layout_margin="10dp"/>
+
+    <Button
+        android:id="@+id/buttonVenue"
+        android:layout_below="@id/buttonFriend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="Venues"
-        android:layout_margin="20dp"/>
+        android:layout_margin="10dp"/>
 
     <Button
         android:id="@+id/buttonGoUpdate"
@@ -77,6 +85,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Go to Update"
-        android:layout_margin="20dp"/>
+        android:layout_margin="10dp"/>
 
 </RelativeLayout>
