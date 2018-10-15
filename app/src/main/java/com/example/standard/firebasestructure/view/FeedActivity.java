@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 
+import com.example.standard.firebasestructure.*;
 import com.example.standard.firebasestructure.R;
 import com.example.standard.firebasestructure.model.*;
 import com.example.standard.firebasestructure.model.adapters.*;
@@ -60,6 +61,7 @@ public class FeedActivity extends AppCompatActivity {
                     outGoerLiveData.observe(FeedActivity.this, new Observer<List<OutGoer>>() {
                         @Override
                         public void onChanged(@Nullable List<OutGoer> outGoers) {
+                            outGoers = Utils.sortOutGoersByTime(outGoers);
                             outGoerAdapter = new OutGoerAdapter(getApplicationContext(), R.layout.view_feed_item, outGoers);
                             listViewOutGoers.setAdapter(outGoerAdapter);
                         }
@@ -69,7 +71,7 @@ public class FeedActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
+                
             }
         });
     }
