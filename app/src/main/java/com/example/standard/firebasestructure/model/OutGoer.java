@@ -2,9 +2,10 @@ package com.example.standard.firebasestructure.model;
 
 import android.support.annotation.Nullable;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class OutGoer {
+public class OutGoer implements Serializable {
     private String userId;
     private String userName;
     private String venueId;

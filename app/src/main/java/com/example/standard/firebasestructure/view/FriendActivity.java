@@ -79,6 +79,11 @@ public class FriendActivity extends AppCompatActivity {
                                     intent.putExtra("friend", friend);
                                     startActivity(intent);
                                 }
+
+                                @Override
+                                public void onItemClick(OutGoer outGoer) {
+                                    //null
+                                }
                             });
                             recyclerViewFriends.setAdapter(recyclerAdapter);
                         }

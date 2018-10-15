@@ -23,7 +23,8 @@
         <activity android:name=".view.VenueActivity" />
         <activity android:name=".view.VenueDetailActivity" />
         <activity android:name=".view.FriendActivity" />
-        <activity android:name=".view.FriendDetailActivity"></activity>
+        <activity android:name=".view.FriendDetailActivity" />
+        <activity android:name=".view.FeedDetailActivity"></activity>
     </application>
 
 </manifest>

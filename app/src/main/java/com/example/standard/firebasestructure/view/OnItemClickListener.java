@@ -8,4 +8,6 @@ public interface OnItemClickListener {
 
     void onItemClick(User friend);
 
+    void onItemClick(OutGoer outGoer);
+
 }

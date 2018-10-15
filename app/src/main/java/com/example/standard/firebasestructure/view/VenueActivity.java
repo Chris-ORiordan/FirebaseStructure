@@ -55,6 +55,11 @@ public class VenueActivity extends AppCompatActivity {
                         public void onItemClick(User friend) {
                             //null
                         }
+
+                        @Override
+                        public void onItemClick(OutGoer outGoer) {
+                            //null
+                        }
                     });
                     recyclerViewVenues.setAdapter(recyclerAdapter);
                 }
