@@ -34,8 +34,12 @@ public class VenueViewModel extends ViewModel {
         }
     }
 
-    public void onUserGoingOut(User selectedUser, Venue selectedVenue){
+    public void addAttendee(User selectedUser, Venue selectedVenue){
         VENUE_REF.child(selectedVenue.getVenueId()).child("attendees").child(selectedUser.getUserId()).setValue(true);
+    }
+
+    public void removeAttendee(User selectedUser, Venue selectedVenue){
+        VENUE_REF.child(selectedVenue.getVenueId()).child("attendees").child(selectedUser.getUserId()).removeValue();
     }
 
     public void createVenue(Venue newVenue){
