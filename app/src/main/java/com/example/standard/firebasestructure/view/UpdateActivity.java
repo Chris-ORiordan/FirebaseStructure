@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 
+import com.example.standard.firebasestructure.*;
 import com.example.standard.firebasestructure.R;
 import com.example.standard.firebasestructure.model.*;
 import com.example.standard.firebasestructure.model.adapters.*;

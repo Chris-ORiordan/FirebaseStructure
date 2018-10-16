@@ -36,10 +36,14 @@
 
     <ToggleButton
         android:id="@+id/tglUserGoingOut"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_below="@+id/textViewVenueName"
         android:layout_centerHorizontal="true"
-        />
+        android:textOn=""
+        android:textOff=""
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:background="@drawable/toggle_selector"/>
 
 </RelativeLayout>
