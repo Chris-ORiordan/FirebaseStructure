@@ -14,7 +14,6 @@ import android.widget.*;
 import com.example.standard.firebasestructure.R;
 import com.example.standard.firebasestructure.model.User;
 import com.example.standard.firebasestructure.model.adapters.UserAdapter;
-import com.example.standard.firebasestructure.view.UpdateActivity;
 import com.example.standard.firebasestructure.viewmodel.*;
 
 import java.util.*;

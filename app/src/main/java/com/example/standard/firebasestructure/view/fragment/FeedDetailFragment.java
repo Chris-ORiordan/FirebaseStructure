@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.example.standard.firebasestructure.R;
 import com.example.standard.firebasestructure.model.OutGoer;
-import com.example.standard.firebasestructure.view.FeedDetailActivity;
 
 public class FeedDetailFragment extends Fragment {
 

@@ -2,7 +2,6 @@ package com.example.standard.firebasestructure.view.fragment;
 
 
 import android.arch.lifecycle.*;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,7 +13,6 @@ import android.widget.*;
 import com.example.standard.firebasestructure.R;
 import com.example.standard.firebasestructure.model.*;
 import com.example.standard.firebasestructure.model.adapters.UserAdapter;
-import com.example.standard.firebasestructure.view.VenueDetailActivity;
 import com.example.standard.firebasestructure.viewmodel.*;
 
 import java.util.List;
