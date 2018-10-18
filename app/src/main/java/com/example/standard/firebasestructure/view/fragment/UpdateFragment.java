@@ -14,6 +14,7 @@ import android.widget.*;
 import com.example.standard.firebasestructure.R;
 import com.example.standard.firebasestructure.model.User;
 import com.example.standard.firebasestructure.model.adapters.UserAdapter;
+import com.example.standard.firebasestructure.view.MainActivity;
 import com.example.standard.firebasestructure.viewmodel.*;
 
 import java.util.*;
@@ -48,6 +49,10 @@ public class UpdateFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_update, container, false);
+
+        ((MainActivity) getActivity()).setActionBarTitle(R.string.update);
+        ((MainActivity) getActivity()).setDisplayHomeAsUpEnabled(false);
+
 
         spinnerUserIAm = fragmentView.findViewById(R.id.spinnerWhoAmI);
         editTextNewName = fragmentView.findViewById(R.id.editTextNewName);

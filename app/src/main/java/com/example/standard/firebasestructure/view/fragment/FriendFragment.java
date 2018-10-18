@@ -50,6 +50,9 @@ public class FriendFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_friend, container, false);
 
+        ((MainActivity) getActivity()).setActionBarTitle(R.string.friends);
+        ((MainActivity) getActivity()).setDisplayHomeAsUpEnabled(false);
+
         spinnerCurrentUser = fragmentView.findViewById(R.id.spinnerCurrentUser);
         recyclerViewFriends = fragmentView.findViewById(R.id.recyclerFriends);
         recyclerViewFriends.setHasFixedSize(true);

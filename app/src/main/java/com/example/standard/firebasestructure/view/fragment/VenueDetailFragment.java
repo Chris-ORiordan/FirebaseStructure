@@ -13,6 +13,7 @@ import android.widget.*;
 import com.example.standard.firebasestructure.R;
 import com.example.standard.firebasestructure.model.*;
 import com.example.standard.firebasestructure.model.adapters.UserAdapter;
+import com.example.standard.firebasestructure.view.MainActivity;
 import com.example.standard.firebasestructure.viewmodel.*;
 
 import java.util.List;
@@ -47,6 +48,8 @@ public class VenueDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_venue_detail, container, false);
+
+        ((MainActivity) getActivity()).setDisplayHomeAsUpEnabled(true);
 
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         venueViewModel = ViewModelProviders.of(this).get(VenueViewModel.class);

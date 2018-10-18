@@ -52,6 +52,9 @@ public class FeedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_feed, container, false);
 
+        ((MainActivity) getActivity()).setActionBarTitle(R.string.feed);
+        ((MainActivity) getActivity()).setDisplayHomeAsUpEnabled(false);
+
         spinnerUserIAm = fragmentView.findViewById(R.id.spinnerUserIAm);
         recyclerViewOutGoers = fragmentView.findViewById(R.id.recyclerViewOutGoers);
         recyclerViewOutGoers.setHasFixedSize(true);

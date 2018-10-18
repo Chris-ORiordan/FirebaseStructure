@@ -135,4 +135,20 @@ public class MainActivity extends AppCompatActivity{
         venueViewModel.createVenue(venue4);
         venueViewModel.createVenue(venue5);
     }
+
+    public void setActionBarTitle(int stringId){
+        getSupportActionBar().setTitle(stringId);
+    }
+
+    public void setDisplayHomeAsUpEnabled(Boolean val){
+        getSupportActionBar().setDisplayHomeAsUpEnabled(val);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home){
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

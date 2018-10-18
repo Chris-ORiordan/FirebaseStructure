@@ -51,6 +51,9 @@ public class GoingOutFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_going_out, container, false);
 
+        ((MainActivity) getActivity()).setActionBarTitle(R.string.going_out);
+        ((MainActivity) getActivity()).setDisplayHomeAsUpEnabled(false);
+
         spinnerUser1 = fragmentView.findViewById(R.id.spinnerUser1);
         spinnerUser2 = fragmentView.findViewById(R.id.spinnerUser2);
         buttonAdd = fragmentView.findViewById(R.id.buttonAdd);

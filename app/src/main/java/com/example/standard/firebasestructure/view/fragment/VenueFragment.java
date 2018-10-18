@@ -45,6 +45,9 @@ public class VenueFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_venue, container, false);
 
+        ((MainActivity) getActivity()).setActionBarTitle(R.string.venues);
+        ((MainActivity) getActivity()).setDisplayHomeAsUpEnabled(false);
+
         venueViewModel = ViewModelProviders.of(this).get(VenueViewModel.class);
 
         recyclerViewVenues = fragmentView.findViewById(R.id.recyclerVenues);
