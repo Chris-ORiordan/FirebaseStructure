@@ -62,6 +62,8 @@ public class VenueDetailFragment extends Fragment {
         Venue chosenVenue = (Venue) getArguments().getSerializable("venue");
         textViewVenueName.setText(chosenVenue.getVenueName());
 
+        ((MainActivity) getActivity()).setActionBarTitle(chosenVenue.getVenueName());
+
         if(userViewModel != null){
             LiveData<List<User>> userLiveData = userViewModel.getUserLiveData();
 

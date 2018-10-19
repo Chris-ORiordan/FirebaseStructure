@@ -42,6 +42,8 @@ public class FriendDetailFragment extends Fragment {
         User friend = (User) getArguments().getSerializable("friend");
         textViewFriendName.setText(friend.getUserName());
 
+        ((MainActivity) getActivity()).setActionBarTitle(friend.getUserName());
+
         return fragmentView;
     }
 
