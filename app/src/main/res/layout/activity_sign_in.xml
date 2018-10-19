@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.fragment.FriendFragment">
+    tools:context=".view.SignInActivity">
 
-    <!--<LinearLayout
-        android:id="@+id/layoutCurrentUser"
+    <LinearLayout
+        android:id="@+id/layoutSignIn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -15,20 +16,22 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Current User:" />
+            android:text="Sign in as:" />
 
         <Spinner
-            android:id="@+id/spinnerCurrentUser"
+            android:id="@+id/spinnerUsers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:tooltipText="User"/>
 
-    </LinearLayout>-->
+        <Button
+            android:id="@+id/buttonSignIn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:text="Sign in"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerFriends"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical"/>
+    </LinearLayout>
 
 </RelativeLayout>

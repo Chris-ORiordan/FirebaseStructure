@@ -11,34 +11,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 
+import com.example.standard.firebasestructure.*;
 import com.example.standard.firebasestructure.R;
 import com.example.standard.firebasestructure.model.User;
 import com.example.standard.firebasestructure.model.adapters.UserAdapter;
 import com.example.standard.firebasestructure.view.MainActivity;
 import com.example.standard.firebasestructure.viewmodel.*;
+import com.squareup.haha.perflib.Main;
 
 import java.util.*;
 
-public class UpdateFragment extends Fragment {
+public class ProfileFragment extends Fragment {
 
-    private Spinner spinnerUserIAm;
     private EditText editTextNewName;
+    private TextView textViewNumDestinations;
+    private TextView textViewNumFriends;
     private Button buttonUpdate;
 
     private UserViewModel userViewModel;
     private OutGoerViewModel outGoerViewModel;
 
-    private UserAdapter userAdapter;
-
-    private User currentUser;
-
-
-    public UpdateFragment() {
+    public ProfileFragment() {
         // Required empty public constructor
     }
 
-    public static UpdateFragment newInstance(){
-        return new UpdateFragment();
+    public static ProfileFragment newInstance(){
+        return new ProfileFragment();
     }
 
     @Override
@@ -48,43 +46,22 @@ public class UpdateFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View fragmentView = inflater.inflate(R.layout.fragment_update, container, false);
+        View fragmentView = inflater.inflate(R.layout.fragment_profile, container, false);
 
         ((MainActivity) getActivity()).setActionBarTitle(R.string.update);
         ((MainActivity) getActivity()).setDisplayHomeAsUpEnabled(false);
 
-
-        spinnerUserIAm = fragmentView.findViewById(R.id.spinnerWhoAmI);
         editTextNewName = fragmentView.findViewById(R.id.editTextNewName);
+        textViewNumDestinations = fragmentView.findViewById(R.id.textViewNumDestinations);
+        textViewNumFriends = fragmentView.findViewById(R.id.textViewNumFriends);
         buttonUpdate = fragmentView.findViewById(R.id.buttonUpdate);
 
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         outGoerViewModel = ViewModelProviders.of(this).get(OutGoerViewModel.class);
 
-        if(userViewModel != null){
-            LiveData<List<User>> userLiveData = userViewModel.getUserLiveData();
-
-            userLiveData.observe(UpdateFragment.this, new Observer<List<User>>() {
-                @Override
-                public void onChanged(@Nullable List<User> userList) {
-                    userAdapter = new UserAdapter(getContext(), R.layout.support_simple_spinner_dropdown_item, userList);
-                    userAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-                    spinnerUserIAm.setAdapter(userAdapter);
-                }
-            });
-        }
-
-        spinnerUserIAm.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
-                currentUser = userAdapter.getItem(pos);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+        editTextNewName.setText(MainApplication.getCurrentUser().getUserName());
+        textViewNumDestinations.setText(MainApplication.getCurrentUser().getDestinations().size() + " Destinations");
+        textViewNumFriends.setText(MainApplication.getCurrentUser().getFriends().size() + " Friends");
 
         buttonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,8 +69,8 @@ public class UpdateFragment extends Fragment {
                 if(editTextNewName.getText().toString().length() != 0 && editTextNewName.getText() != null){
                     Map<String, Object> newNameMap = new HashMap<>();
                     newNameMap.put("userName", editTextNewName.getText().toString());
-                    userViewModel.updateUser(currentUser, newNameMap);
-                    outGoerViewModel.updateOutGoerUser(currentUser, newNameMap);
+                    userViewModel.updateUser(MainApplication.getCurrentUser(), newNameMap);
+                    outGoerViewModel.updateOutGoerUser(MainApplication.getCurrentUser(), newNameMap);
                 }
             }
         });

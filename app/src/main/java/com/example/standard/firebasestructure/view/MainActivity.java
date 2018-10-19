@@ -1,8 +1,6 @@
 package com.example.standard.firebasestructure.view;
 
 import android.arch.lifecycle.*;
-import android.arch.lifecycle.Observer;
-import android.content.Intent;
 import android.support.annotation.*;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.*;
@@ -13,12 +11,9 @@ import android.widget.*;
 
 import com.example.standard.firebasestructure.R;
 import com.example.standard.firebasestructure.model.*;
-import com.example.standard.firebasestructure.model.adapters.*;
 import com.example.standard.firebasestructure.view.fragment.*;
 import com.example.standard.firebasestructure.viewmodel.*;
 import com.google.firebase.database.*;
-
-import java.util.*;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -63,8 +58,8 @@ public class MainActivity extends AppCompatActivity{
                     case R.id.goingOutTab :
                         selectedFragment = GoingOutFragment.newInstance();
                         break;
-                    case R.id.updateTab :
-                        selectedFragment = UpdateFragment.newInstance();
+                    case R.id.profileTab :
+                        selectedFragment = ProfileFragment.newInstance();
                         break;
                 }
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -80,34 +75,6 @@ public class MainActivity extends AppCompatActivity{
         fragmentTransaction.commit();
 
         //createUsersAndVenues();
-
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                Fragment selectedFragment = null;
-                switch (menuItem.getItemId()){
-                    case R.id.feedTab :
-                        selectedFragment = FeedFragment.newInstance();
-                        break;
-                    case R.id.venuesTab :
-                        selectedFragment = VenueFragment.newInstance();
-                        break;
-                    case R.id.friendsTab :
-                        selectedFragment = FriendFragment.newInstance();
-                        break;
-                    case R.id.goingOutTab :
-                        selectedFragment = GoingOutFragment.newInstance();
-                        break;
-                    case R.id.updateTab :
-                        selectedFragment = UpdateFragment.newInstance();
-                        break;
-                }
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(frameLayoutContainer.getId(), selectedFragment);
-                fragmentTransaction.commit();
-                return true;
-            }
-        });
     }
 
     private void createUsersAndVenues() {

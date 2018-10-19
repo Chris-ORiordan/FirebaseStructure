@@ -25,9 +25,6 @@ public class FeedFragment extends Fragment {
 
     private static final String TAG = FeedFragment.class.getSimpleName();
 
-    private Spinner spinnerUserIAm;
-    private UserAdapter userAdapter;
-
     private RecyclerView recyclerViewOutGoers;
     private RecyclerView.Adapter recyclerAdapter;
     private RecyclerView.LayoutManager recyclerLayoutManager;
@@ -55,72 +52,48 @@ public class FeedFragment extends Fragment {
         ((MainActivity) getActivity()).setActionBarTitle(R.string.feed);
         ((MainActivity) getActivity()).setDisplayHomeAsUpEnabled(false);
 
-        spinnerUserIAm = fragmentView.findViewById(R.id.spinnerUserIAm);
         recyclerViewOutGoers = fragmentView.findViewById(R.id.recyclerViewOutGoers);
         recyclerViewOutGoers.setHasFixedSize(true);
 
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         outGoerViewModel = ViewModelProviders.of(this).get(OutGoerViewModel.class);
 
-        if(userViewModel != null){
-            LiveData<List<User>> userLiveData = userViewModel.getUserLiveData();
+        if(outGoerViewModel != null){
+            LiveData<List<OutGoer>> outGoerLiveData = outGoerViewModel.getOutGoerLiveData(MainApplication.getCurrentUser().getUserId());
 
-            userLiveData.observe(this, new Observer<List<User>>() {
+            outGoerLiveData.observe(FeedFragment.this, new Observer<List<OutGoer>>() {
                 @Override
-                public void onChanged(@Nullable List<User> userList) {
-                    userAdapter = new UserAdapter(getContext(), R.layout.support_simple_spinner_dropdown_item, userList);
-                    userAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-                    spinnerUserIAm.setAdapter(userAdapter);
+                public void onChanged(@Nullable List<OutGoer> outGoers) {
+                    outGoers = Utils.sortOutGoersByTime(outGoers);
+                    recyclerLayoutManager = new LinearLayoutManager(getContext());
+                    recyclerViewOutGoers.setLayoutManager(recyclerLayoutManager);
+                    recyclerAdapter = new OutGoerRecyclerAdapter(getContext(), outGoers, new OnItemClickListener() {
+                        @Override
+                        public void onItemClick(Venue venue) {
+                            //null
+                        }
+
+                        @Override
+                        public void onItemClick(User friend) {
+                            //null
+                        }
+
+                        @Override
+                        public void onItemClick(OutGoer outGoer) {
+                            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("outGoer", outGoer);
+                            FeedDetailFragment feedDetailFragment= FeedDetailFragment.newInstance();
+                            feedDetailFragment.setArguments(bundle);
+                            fragmentTransaction.replace(R.id.framelayoutContainer, feedDetailFragment);
+                            fragmentTransaction.addToBackStack(null);
+                            fragmentTransaction.commit();
+                        }
+                    });
+                    recyclerViewOutGoers.setAdapter(recyclerAdapter);
                 }
             });
         }
-
-        spinnerUserIAm.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(outGoerViewModel != null){
-                    LiveData<List<OutGoer>> outGoerLiveData = outGoerViewModel.getOutGoerLiveData(userAdapter.getItem(i).getUserId());
-
-                    outGoerLiveData.observe(FeedFragment.this, new Observer<List<OutGoer>>() {
-                        @Override
-                        public void onChanged(@Nullable List<OutGoer> outGoers) {
-                            outGoers = Utils.sortOutGoersByTime(outGoers);
-                            recyclerLayoutManager = new LinearLayoutManager(getContext());
-                            recyclerViewOutGoers.setLayoutManager(recyclerLayoutManager);
-                            recyclerAdapter = new OutGoerRecyclerAdapter(getContext(), outGoers, new OnItemClickListener() {
-                                @Override
-                                public void onItemClick(Venue venue) {
-                                    //null
-                                }
-
-                                @Override
-                                public void onItemClick(User friend) {
-                                    //null
-                                }
-
-                                @Override
-                                public void onItemClick(OutGoer outGoer) {
-                                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                                    Bundle bundle = new Bundle();
-                                    bundle.putSerializable("outGoer", outGoer);
-                                    FeedDetailFragment feedDetailFragment= FeedDetailFragment.newInstance();
-                                    feedDetailFragment.setArguments(bundle);
-                                    fragmentTransaction.replace(R.id.framelayoutContainer, feedDetailFragment);
-                                    fragmentTransaction.addToBackStack(null);
-                                    fragmentTransaction.commit();
-                                }
-                            });
-                            recyclerViewOutGoers.setAdapter(recyclerAdapter);
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
         return fragmentView;
     }
 }
