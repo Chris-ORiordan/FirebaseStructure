@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity{
                         break;
                 }
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 fragmentTransaction.replace(frameLayoutContainer.getId(), selectedFragment);
                 fragmentTransaction.commit();
                 return true;
