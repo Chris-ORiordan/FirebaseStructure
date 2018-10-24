@@ -8,7 +8,7 @@ import android.view.*;
 import android.widget.TextView;
 
 import com.example.standard.firebasestructure.*;
-import com.example.standard.firebasestructure.model.Venue;
+import com.example.standard.firebasestructure.model.*;
 import com.example.standard.firebasestructure.view.*;
 
 import java.util.*;
@@ -16,6 +16,7 @@ import java.util.*;
 public class VenueRecyclerAdapter extends RecyclerView.Adapter<VenueRecyclerAdapter.VenueViewHolder> {
 
     private List<Venue> venueList;
+    private List<User> userList;
     private LayoutInflater inflater;
     private final OnItemClickListener listener;
     private Context context;
@@ -45,10 +46,11 @@ public class VenueRecyclerAdapter extends RecyclerView.Adapter<VenueRecyclerAdap
         return venueList.get(id);
     }
 
-    public VenueRecyclerAdapter(Context context, List<Venue> venueList, OnItemClickListener listener) {
+    public VenueRecyclerAdapter(Context context, List<Venue> venueList, List<User> userList, OnItemClickListener listener) {
         this.inflater = LayoutInflater.from(context);
         this.context = context;
         this.venueList = venueList;
+        this.userList = userList;
         this.listener = listener;
     }
 
@@ -63,13 +65,19 @@ public class VenueRecyclerAdapter extends RecyclerView.Adapter<VenueRecyclerAdap
     public void onBindViewHolder(@NonNull VenueViewHolder venueViewHolder, int i) {
         venueViewHolder.bind(venueList.get(i), listener);
         venueViewHolder.textViewName.setText(venueList.get(i).getVenueName());
-        int numFriends = 0;
+
+        Set<String> friendsAttending = new HashSet<>();
+        int j = 0;
+        Boolean imGoing = false;
+
         if(venueList.get(i).getAttendees() != null){
             for(String attendeeId: venueList.get(i).getAttendees().keySet()){
-                if(MainApplication.getCurrentUser().getFriends() != null){
-                    for(String friendId: MainApplication.getCurrentUser().getFriends().keySet()){
-                        if(attendeeId.equals(friendId)){
-                            numFriends++;
+                for(User user: userList){
+                    if(attendeeId.equals(user.getUserId())){
+                        if(attendeeId.equals(MainApplication.getCurrentUser().getUserId())){
+                            imGoing = true;
+                        } else {
+                            friendsAttending.add(user.getUserName());
                         }
                     }
                 }
@@ -77,19 +85,48 @@ public class VenueRecyclerAdapter extends RecyclerView.Adapter<VenueRecyclerAdap
             String attendeeOrPlural = venueList.get(i).getAttendees().size() == 1 ?
                     context.getString(R.string.attendee) : context.getString(R.string.attendees);
 
-            String friendOrPlural = numFriends == 1 ?
-                    context.getString(R.string.friendGoingOut) : context.getString(R.string.friendsGoingOut);
+            String otherOrPlural = (venueList.get(i).getAttendees().size() - friendsAttending.size() > 1) ?
+                    context.getString(R.string.othersGoingOut) : context.getString(R.string.otherGoingOut);
 
-            String otherOrPlural = (venueList.get(i).getAttendees().size() - numFriends > 1) ?
-                    context.getString(R.string.others) : context.getString(R.string.other);
+            if(imGoing){
+                venueViewHolder.textViewNumAttendees.append("You, ");
+            }
 
-            if(numFriends == venueList.get(i).getAttendees().size()){
-                venueViewHolder.textViewNumAttendees.setText(numFriends + friendOrPlural);
-            } else if(numFriends == 0){
-                venueViewHolder.textViewNumAttendees.setText(venueList.get(i).getAttendees().size() + attendeeOrPlural);
+            //all attendees are friends
+            if(friendsAttending.size() == venueList.get(i).getAttendees().size()){
+                for(String friendAttendingName: friendsAttending){
+                    if(++j == friendsAttending.size()){
+                        venueViewHolder.textViewNumAttendees.append(friendAttendingName);
+                    } else {
+                        venueViewHolder.textViewNumAttendees.append(friendAttendingName + ", ");
+                    }
+                }
+            //no attendees are friends
+            } else if(friendsAttending.size() == 0){
+                if(imGoing){
+                    if((venueList.get(i).getAttendees().size() - 1) == 0){
+                        venueViewHolder.textViewNumAttendees.setText("You");
+                    } else {
+                        venueViewHolder.textViewNumAttendees.setText((venueList.get(i).getAttendees().size() - 1) + attendeeOrPlural);
+                    }
+                } else {
+                    venueViewHolder.textViewNumAttendees.setText(venueList.get(i).getAttendees().size() + attendeeOrPlural);
+                }
             } else {
-                venueViewHolder.textViewNumAttendees.setText(numFriends + friendOrPlural + 
-                " and " + (venueList.get(i).getAttendees().size() - numFriends) + otherOrPlural);
+                for(String friendAttendingName: friendsAttending){
+                    if(++j == friendsAttending.size()){
+                        venueViewHolder.textViewNumAttendees.append(friendAttendingName);
+                    } else {
+                        venueViewHolder.textViewNumAttendees.append(friendAttendingName + ", ");
+                    }
+                    if(imGoing){
+                        if((venueList.get(i).getAttendees().size() - friendsAttending.size()) == 0){
+                            venueViewHolder.textViewNumAttendees.append(" and " + (venueList.get(i).getAttendees().size() - friendsAttending.size()) + otherOrPlural);
+                        }
+                    } else {
+                        venueViewHolder.textViewNumAttendees.append(" and " + (venueList.get(i).getAttendees().size() - friendsAttending.size()) + otherOrPlural);
+                    }
+                }
             }
         } else {
             venueViewHolder.textViewNumAttendees.setText(R.string.noAttendees);
