@@ -7,11 +7,14 @@
 
     <string name="attendees">\u0020attendees</string>
     <string name="attendee">\u0020attendee</string>
+    <string name="noAttendees">Nobody going here :(</string>
+
     <string name="friendsGoingOut">\u0020friends</string>
     <string name="friendGoingOut">\u0020friend</string>
-    <string name="otherGoingOut">\u0020other</string>
-    <string name="othersGoingOut">\u0020others</string>
-    <string name="noAttendees">Nobody going here :(</string>
+
+    <string name="other">\u0020other</string>
+    <string name="others">\u0020others</string>
+
 
     <!--String to identify how long ago an event occurred-->
     <string name="seconds">s</string>
@@ -20,7 +23,6 @@
     <string name="days">d</string>
     <string name="weeks">w</string>
     <string name="years">y</string>
-
     <string name="feed">Feed</string>
     <string name="venues">Venues</string>
     <string name="friends">Friends</string>

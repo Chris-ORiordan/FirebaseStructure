@@ -16,7 +16,7 @@ import com.example.standard.firebasestructure.R;
 import com.example.standard.firebasestructure.model.*;
 import com.example.standard.firebasestructure.model.adapters.VenueRecyclerAdapter;
 import com.example.standard.firebasestructure.view.*;
-import com.example.standard.firebasestructure.viewmodel.*;
+import com.example.standard.firebasestructure.viewmodel.VenueViewModel;
 
 import java.util.List;
 
@@ -27,9 +27,6 @@ public class VenueFragment extends Fragment {
     private RecyclerView.LayoutManager recyclerManager;
 
     private VenueViewModel venueViewModel;
-    private UserViewModel userViewModel;
-
-    private List<User> userList;
 
     public VenueFragment() {
         // Required empty public constructor
@@ -52,21 +49,9 @@ public class VenueFragment extends Fragment {
         ((MainActivity) getActivity()).setDisplayHomeAsUpEnabled(false);
 
         venueViewModel = ViewModelProviders.of(this).get(VenueViewModel.class);
-        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
         recyclerViewVenues = fragmentView.findViewById(R.id.recyclerVenues);
         recyclerViewVenues.setHasFixedSize(true);
-
-        if(userViewModel != null){
-            LiveData<List<User>> userLiveData = userViewModel.getUserLiveData();
-
-            userLiveData.observe(VenueFragment.this, new Observer<List<User>>() {
-                @Override
-                public void onChanged(@Nullable List<User> users) {
-                    userList = users;
-                }
-            });
-        }
 
         if(venueViewModel != null){
             LiveData<List<Venue>> venueLiveData = venueViewModel.getVenueLiveData();
@@ -77,7 +62,7 @@ public class VenueFragment extends Fragment {
                     venues = Utils.sortVenuesByAttendees(venues);
                     recyclerManager = new LinearLayoutManager(getContext());
                     recyclerViewVenues.setLayoutManager(recyclerManager);
-                    recyclerAdapter = new VenueRecyclerAdapter(getContext(), venues, userList,  new OnItemClickListener() {
+                    recyclerAdapter = new VenueRecyclerAdapter(getContext(), venues, new OnItemClickListener() {
                         @Override
                         public void onItemClick(Venue venue) {
                             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
