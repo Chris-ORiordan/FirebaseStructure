@@ -93,6 +93,12 @@
         <!--android:text="Go to Update"-->
         <!--android:layout_margin="5dp"/>-->
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_above="@id/navigationBar"
+        android:background="@drawable/navbar_shadow"/>
+
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigationBar"
         android:layout_width="match_parent"
@@ -102,6 +108,7 @@
         app:menu="@menu/navigation"
         app:labelVisibilityMode="labeled"
         app:itemIconTint="@drawable/nav_item_selector"
-        app:itemTextColor="@drawable/nav_item_selector"/>
+        app:itemTextColor="@drawable/nav_item_selector"
+        android:elevation="8dp"/>
 
 </RelativeLayout>
