@@ -51,6 +51,8 @@ public class FriendFragment extends Fragment {
 
         recyclerViewFriends = fragmentView.findViewById(R.id.recyclerFriends);
         recyclerViewFriends.setHasFixedSize(true);
+        recyclerViewFriends.setItemViewCacheSize(20);
+        recyclerViewFriends.setDrawingCacheEnabled(true);
 
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 

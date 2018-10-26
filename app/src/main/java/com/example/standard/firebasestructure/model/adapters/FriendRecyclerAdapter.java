@@ -1,14 +1,23 @@
 package com.example.standard.firebasestructure.model.adapters;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.*;
-import android.widget.TextView;
+import android.widget.*;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.example.standard.firebasestructure.*;
 import com.example.standard.firebasestructure.R;
 import com.example.standard.firebasestructure.model.User;
 import com.example.standard.firebasestructure.view.OnItemClickListener;
+import com.google.android.gms.tasks.*;
+import com.google.firebase.storage.*;
+import com.squareup.picasso.*;
 
 import java.util.List;
 
@@ -18,6 +27,7 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
     private LayoutInflater inflater;
     private OnItemClickListener onItemClickListener;
     private Context context;
+
 
     public FriendRecyclerAdapter(Context context, List<User> friendList, OnItemClickListener onItemClickListener) {
         this.inflater = LayoutInflater.from(context);
@@ -40,6 +50,20 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
     @Override
     public void onBindViewHolder(@NonNull FriendViewHolder friendViewHolder, int i) {
         friendViewHolder.bind(friendList.get(i), onItemClickListener);
+
+        Constants.STORAGE_REF.child("images").child(friendList.get(i).getUserId()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Glide.with(context)
+                        .load(uri)
+                        .apply(RequestOptions.centerCropTransform())
+                        .apply(RequestOptions.placeholderOf(R.drawable.common_full_open_on_phone))
+                        .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
+                        .thumbnail(0.01f)
+                        .into(friendViewHolder.imageViewFriendPhoto);
+            }
+        });
+
         friendViewHolder.textViewFriendName.setText(friendList.get(i).getUserName());
         if(friendList.get(i).getDestinations() != null){
             if(friendList.get(i).getDestinations().size() == 1){
@@ -65,11 +89,13 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
 
     public static class FriendViewHolder extends RecyclerView.ViewHolder{
 
+        private ImageView imageViewFriendPhoto;
         private TextView textViewFriendName;
         private TextView textViewFriendDestinations;
 
         public FriendViewHolder(@NonNull View itemView) {
             super(itemView);
+            imageViewFriendPhoto = itemView.findViewById(R.id.imageViewFriend);
             textViewFriendName = itemView.findViewById(R.id.friendName);
             textViewFriendDestinations = itemView.findViewById(R.id.destinations);
         }

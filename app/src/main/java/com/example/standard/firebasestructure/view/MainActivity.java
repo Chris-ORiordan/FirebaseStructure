@@ -1,19 +1,25 @@
 package com.example.standard.firebasestructure.view;
 
 import android.arch.lifecycle.*;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.*;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.*;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.*;
 import android.widget.*;
 
+import com.example.standard.firebasestructure.*;
 import com.example.standard.firebasestructure.R;
 import com.example.standard.firebasestructure.model.*;
 import com.example.standard.firebasestructure.view.fragment.*;
 import com.example.standard.firebasestructure.viewmodel.*;
+import com.google.android.gms.tasks.*;
 import com.google.firebase.database.*;
+import com.google.firebase.storage.*;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -25,12 +31,15 @@ public class MainActivity extends AppCompatActivity{
     private UserViewModel userViewModel;
     private VenueViewModel venueViewModel;
 
+    private StorageReference storageReference;
+
     final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        storageReference = FirebaseStorage.getInstance().getReference();
 
         frameLayoutContainer = findViewById(R.id.framelayoutContainer);
         bottomNavigationView = findViewById(R.id.navigationBar);
@@ -120,5 +129,29 @@ public class MainActivity extends AppCompatActivity{
             onBackPressed();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode){
+            case Constants.REQUEST_GALLERY:
+                Uri selectedImage = data.getData();
+                StorageReference imageRef = storageReference.child("images").child(MainApplication.getCurrentUser().getUserId());
+                UploadTask uploadTask = imageRef.putFile(selectedImage);
+
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Log.v("IMAGE UPLOAD", "SUCCESSFUL");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.v("IMAGE UPLOAD", "FAILED");
+                    }
+                });
+        }
     }
 }

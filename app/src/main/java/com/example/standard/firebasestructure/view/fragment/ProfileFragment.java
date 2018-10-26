@@ -1,12 +1,17 @@
 package com.example.standard.firebasestructure.view.fragment;
 
 
+import android.app.Activity;
 import android.arch.lifecycle.*;
 import android.arch.lifecycle.Observer;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.provider.MediaStore;
+import android.support.annotation.*;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.*;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +23,13 @@ import com.example.standard.firebasestructure.model.*;
 import com.example.standard.firebasestructure.model.adapters.*;
 import com.example.standard.firebasestructure.view.*;
 import com.example.standard.firebasestructure.viewmodel.*;
+import com.google.android.gms.tasks.*;
+import com.google.firebase.storage.*;
 import com.squareup.haha.perflib.Main;
 
 import java.util.*;
+
+import static android.app.Activity.RESULT_OK;
 
 public class ProfileFragment extends Fragment {
 
@@ -29,11 +38,13 @@ public class ProfileFragment extends Fragment {
     private RecyclerView.Adapter recyclerAdapter;
     private RecyclerView.LayoutManager recyclerLayoutManager;
     private Button buttonUpdate;
+    private Button buttonUpload;
 
     private UserViewModel userViewModel;
     private VenueViewModel venueViewModel;
     private OutGoerViewModel outGoerViewModel;
 
+    private StorageReference storageReference;
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -51,6 +62,8 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        storageReference = FirebaseStorage.getInstance().getReference();
+
         ((MainActivity) getActivity()).setActionBarTitle(R.string.update);
         ((MainActivity) getActivity()).setDisplayHomeAsUpEnabled(false);
 
@@ -58,6 +71,7 @@ public class ProfileFragment extends Fragment {
         recyclerViewDestinations = fragmentView.findViewById(R.id.recyclerDestinations);
         recyclerViewDestinations.setHasFixedSize(true);
         buttonUpdate = fragmentView.findViewById(R.id.buttonUpdate);
+        buttonUpload = fragmentView.findViewById(R.id.buttonUpload);
 
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         venueViewModel = ViewModelProviders.of(this).get(VenueViewModel.class);
@@ -106,7 +120,24 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        buttonUpload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                // Show only images, no videos or anything else
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                // Always show the chooser (if there are multiple options available)
+                getActivity().startActivityForResult(Intent.createChooser(intent, "Select Picture"), Constants.REQUEST_GALLERY);
+            }
+        });
+
         return fragmentView;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        userViewModel.updatePhoto(requestCode, resultCode, data);
+    }
 }

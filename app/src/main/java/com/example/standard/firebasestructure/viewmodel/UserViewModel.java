@@ -2,16 +2,24 @@ package com.example.standard.firebasestructure.viewmodel;
 
 import android.arch.core.util.Function;
 import android.arch.lifecycle.*;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.*;
+import android.util.Log;
 
+import com.example.standard.firebasestructure.*;
 import com.example.standard.firebasestructure.model.*;
 import com.example.standard.firebasestructure.network.FirebaseQueryLiveData;
+import com.google.android.gms.tasks.*;
 import com.google.firebase.database.*;
+import com.google.firebase.storage.*;
+import com.squareup.picasso.Picasso;
 
 import java.util.*;
 
 public class UserViewModel extends ViewModel {
     private static final DatabaseReference USER_REF = FirebaseDatabase.getInstance().getReference().child("Users");
+    private static final StorageReference STORAGE_REF = FirebaseStorage.getInstance().getReference();
 
     private List<User> userList = new ArrayList<>();
     private List<User> friendList = new ArrayList<>();
@@ -27,6 +35,27 @@ public class UserViewModel extends ViewModel {
         FirebaseQueryLiveData liveData = new FirebaseQueryLiveData(USER_REF);
         LiveData<List<User>> friendsLiveData = Transformations.map(liveData, new FriendDeserialiser(friendIDs));
         return friendsLiveData;
+    }
+
+    public void updatePhoto(int requestCode, int resultCode, Intent data) {
+        switch (requestCode){
+            case Constants.REQUEST_GALLERY:
+                Uri selectedImage = data.getData();
+                StorageReference imageRef = Constants.STORAGE_REF.child("images").child(MainApplication.getCurrentUser().getUserId());
+                UploadTask uploadTask = imageRef.putFile(selectedImage);
+
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Log.v("IMAGE UPLOAD", "SUCCESSFUL");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.v("IMAGE UPLOAD", "FAILED");
+                    }
+                });
+        }
     }
 
 

@@ -42,11 +42,16 @@
             <!--android:layout_marginBottom="10dp"/>-->
 
         <Button
-            android:layout_below="@id/layoutEdit"
             android:id="@+id/buttonUpdate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Update Name"/>
+
+        <Button
+            android:id="@+id/buttonUpload"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Upload Image"/>
 
     </LinearLayout>
 </RelativeLayout>
